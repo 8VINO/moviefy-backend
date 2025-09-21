@@ -7,7 +7,7 @@ dotenv.config();
 const router = Router();
 const TOKEN = process.env.TOKEN;
 const MAIN_ROUTE = process.env.MAIN_ROUTE;
-
+const API_KEY = process.env.API_KEY;
 
 router.all("/", async (req, res) => {
   const urlParam = req.query.url;
@@ -52,6 +52,19 @@ router.all("/", async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+});
+router.get("/movie/:id", async (req, res) => {
+  const { id } = req.params;
+  const response = await fetch(`${MAIN_ROUTE}/movie/${id}?api_key=${API_KEY}&language=pt-BR`);
+  const data = await response.json();
+  res.json(data);
+});
+
+router.get("/tv/:id", async (req, res) => {
+  const { id } = req.params;
+  const response = await fetch(`${MAIN_ROUTE}/tv/${id}?api_key=${API_KEY}&language=pt-BR`);
+  const data = await response.json();
+  res.json(data);
 });
 
 export default router;
