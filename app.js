@@ -1,8 +1,10 @@
+import dotenv from "dotenv";
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import dotenv from "dotenv";
+
 import routes from "./routes/index.route.js";
+import sequelize from'./config/sequelize.js'
 
 dotenv.config();
 
@@ -15,6 +17,11 @@ app.use(cookieParser());
 app.use(cors({ origin: "*" }));
 app.disable("etag");
 
+sequelize.sync({ force: true }).then(()=>{
+
+    console.log('conectado com o database');
+
+})
 routes(app);
 
 app.listen(PORT, () => {
