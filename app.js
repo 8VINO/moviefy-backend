@@ -1,4 +1,5 @@
-import dotenv from "dotenv";
+import 'dotenv/config';
+
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -6,7 +7,7 @@ import cors from "cors";
 import routes from "./routes/index.route.js";
 import sequelize from'./config/sequelize.js'
 
-dotenv.config();
+
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -17,9 +18,9 @@ app.use(cookieParser());
 app.use(cors({ origin: "*" }));
 app.disable("etag");
 
-sequelize.sync({ force: true }).then(()=>{
+sequelize.sync({ force: false }).then(()=>{
 
-    console.log('conectado com o database');
+    console.log('connected to the database');
 
 })
 routes(app);

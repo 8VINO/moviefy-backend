@@ -1,8 +1,5 @@
 import { Router } from "express";
 import fetch from "node-fetch";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 const router = Router();
 const TOKEN = process.env.TOKEN;

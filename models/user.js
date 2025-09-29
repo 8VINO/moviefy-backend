@@ -19,12 +19,14 @@ const user = (sequelize, DataTypes)=>{
         User.belongsToMany(models.Movie, 
             { 
                 through: 'UserMovie', 
-                foreignKey: 'userId' 
+                foreignKey: 'userId',
+                as: 'Movie' 
             });
         User.belongsToMany(models.Series, 
             { 
                 through: 'UserSeries',
-                foreignKey: 'userId' 
+                foreignKey: 'userId',
+                as: 'Series' 
             });
   }
 
