@@ -36,7 +36,7 @@ router.get('/:id', authenticate, async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    res.json(user);
+    res.status(200).json({name:user.name,email:user.email});
 
     console.log('User found!');
 
@@ -114,8 +114,7 @@ router.post('/login', async (req, res) => {
 
     const token = jwt.sign({ id: user.id }, jwtConfig.secret, { expiresIn: jwtConfig.expiresIn });
 
-    res.json({ token });
-
+    res.status(200).json({ token });
   } catch (err) {
     console.log(err)
     res.status(500).json({ error: 'Error when logging in' })
@@ -125,7 +124,7 @@ router.post('/login', async (req, res) => {
 
 router.post('/favorites/movie/:userId/:movieId', authenticate, async (req, res) => {
   const { userId, movieId } = req.params;
-
+  try{
   let movie = await Movie.findByPk(movieId)
 
   if (!movie) {
@@ -135,13 +134,16 @@ router.post('/favorites/movie/:userId/:movieId', authenticate, async (req, res) 
   const user = await User.findByPk(userId);
 
   await user.addMovie(movie);
-
-  res.status(201).send('Movie associate with the user!');
+  res.status(200).send('Movie associate with the user!');
+  } catch(err){
+    console.log(err)
+    res.status(500).json({error: 'Error adding movie to favorites'})
+  }
 });
 
 router.post('/favorites/series/:userId/:seriesId', authenticate, async (req, res) => {
   const { userId, seriesId } = req.params;
-
+  try{
   let series = await Series.findByPk(seriesId)
 
   if (!series) {
@@ -152,12 +154,16 @@ router.post('/favorites/series/:userId/:seriesId', authenticate, async (req, res
 
   await user.addSeries(series);
 
-  res.status(201).send('Series associate with the user!');
+  res.status(200).send('Series associate with the user!');
+  }catch(err){
+    console.log(err)
+    res.status(500).json({error: 'Error adding series to favorites'})
+  }
 });
 
 router.get('/favorites/movie/:userId', authenticate, async (req, res) => {
   const { userId } = req.params;
-
+  try{
   const user = await User.findByPk(userId)
 
   if (!user) {
@@ -167,12 +173,15 @@ router.get('/favorites/movie/:userId', authenticate, async (req, res) => {
   const movies = await user.getMovie();
 
   res.status(200).json(movies)
-
+  } catch(err){
+    console.log(err)
+    res.status(500).json({error: 'Error searching for favorites movies'})
+  }
 });
 
 router.get('/favorites/series/:userId', authenticate, async (req, res) => {
   const { userId } = req.params;
-
+  try{
   const user = await User.findByPk(userId)
 
   if (!user) {
@@ -182,7 +191,10 @@ router.get('/favorites/series/:userId', authenticate, async (req, res) => {
   const movies = await user.getSeries();
 
   res.status(200).json(movies)
-
+  }catch(err){
+    console.log(err)
+    res.status(500).json({error: 'Error searching for favorites series'})
+  }
 });
 
 export default router;
