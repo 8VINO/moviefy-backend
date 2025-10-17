@@ -197,4 +197,50 @@ router.get('/favorites/series/:userId', authenticate, async (req, res) => {
   }
 });
 
+router.delete('/favorites/movie/:userId/:movieId', authenticate, async (req, res) => {
+  const { userId, movieId } = req.params;
+  try{
+  const user = await User.findByPk(userId)
+  const movie = await Movie.findByPk(movieId)
+
+  if (!user) {
+    return res.status(404).json({ error: 'User not found' });
+  }
+  if (!movie) {
+    return res.status(404).json({ error: 'Movie not found' });
+  }
+
+  await user.removeMovie(movieId);
+
+  res.status(200).json()
+  } catch(err){
+    console.log(err)
+    res.status(500).json({error: 'Error searching for favorites movies'})
+  }
+});
+
+router.delete('/favorites/series/:userId/:seriesId', authenticate, async (req, res) => {
+  console.log('foi')
+  const { userId, seriesId } = req.params;
+  try{
+  const user = await User.findByPk(userId)
+  const series = await Series.findByPk(seriesId)
+
+  if (!user) {
+    return res.status(404).json({ error: 'User not found' });
+  }
+  if (!series) {
+    return res.status(404).json({ error: 'Series not found' });
+  }
+
+  await user.removeSeries(seriesId);
+
+  res.status(200).json()
+  }catch(err){
+    console.log(err)
+    res.status(500).json({error: 'Error searching for favorites series'})
+  }
+});
+
+
 export default router;
